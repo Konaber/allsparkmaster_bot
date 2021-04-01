@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "allsparkmaster_bot", "allsparkmaster_bot.pyproj", "{9290A079-632F-4E80-AF71-4C712B52BF09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9290A079-632F-4E80-AF71-4C712B52BF09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9290A079-632F-4E80-AF71-4C712B52BF09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35B9FFC7-30FB-4937-B327-B46C1FA3DAC6}
+	EndGlobalSection
+EndGlobal

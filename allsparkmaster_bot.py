@@ -58,7 +58,7 @@ def wakeUpAllspark(update, context):
 def sleepAllspark(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="The Allspark will sleep!")
     ssh.connect(strIp, username=strCommodus, password=strCommodusPw)
-    stdin, stdout, stderr = sshCommodus.exec_command('sudo shutdown -P now', get_pty=True)
+    stdin, stdout, stderr = ssh.exec_command('sudo shutdown -P now', get_pty=True)
     stdin.write(strCommodusPw)
     stdin.write("\n")
     stdin.flush()

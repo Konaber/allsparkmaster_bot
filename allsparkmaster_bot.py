@@ -35,10 +35,10 @@ strHelp += "/startMcserver - start the Minecraft server\n"
 strHelp += "/stopMcserver - stop the Minecraft server\n" 
 
 updater = Updater(token=strBotToken)
-
 dispatcher = updater.dispatcher
 
-logging.basicConfig(filename='cheetor.log', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+#logging.basicConfig(filename='cheetor.log', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -107,18 +107,14 @@ def getMcserverStatus():
 # Functions for handlers
 def help(update, context):
     logging.debug(help.__name__)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=strHelp)
-
-def echo(update, context):
-    logging.debug(echo.__name__)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=strHelp)
+    sendMessage(strHelp, update, context)
 
 def wakeUpAllspark(update, context):
     logging.info(wakeUpAllspark.__name__)
     if False == getThreadLocked():
         setThreadLocked()
         send_magic_packet(strMac)
-        context.bot.send_message(chat_id=update.effective_chat.id, text="The Allspark will wake up!")
+        sendMessage("The Allspark will wake up!", update, context)
         time.sleep(30)
         retValue = connectSsh(strIp, strCommodus, strCommodusPw, update, context)
         if True == retValue:
@@ -128,20 +124,20 @@ def wakeUpAllspark(update, context):
         else:
             str = "ERROR: The Allspark is still sleeping"
             logging.info(str)
-            context.bot.send_message(chat_id=update.effective_chat.id, text=str)
+            sendMessage(str, update, context)
         ssh.close()
         setThreadUnlocked()
     else:
         str = "Allspark is busy, wait for last command to finish"
         logging.info(str)
-        context.bot.send_message(chat_id=update.effective_chat.id, text=str)
+        sendMessage(str, update, context)
 
 def sleepAllspark(update, context):
     logging.info(sleepAllspark.__name__)
     if False == getThreadLocked():
         setThreadLocked()
         if (False == getArkserverStatus()) and (False == getCssserverStatus()) and (False == getMcserverStatus()):
-            context.bot.send_message(chat_id=update.effective_chat.id, text="The Allspark will sleep!")
+            sendMessage("The Allspark will sleep!", update, context)
             retValue = connectSsh(strIp, strCommodus, strCommodusPw, update, context)
             if True == retValue:
                 stdin, stdout, stderr = ssh.exec_command('sudo shutdown -P now', get_pty=True)
@@ -152,16 +148,16 @@ def sleepAllspark(update, context):
                 stdin.flush()
             ssh.close()
         else:
-            context.bot.send_message(chat_id=update.effective_chat.id, text="ERROR: Check running servers!")
+            sendMessage("ERROR: Check running servers!", update, context)
         setThreadUnlocked()
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Allspark is busy, wait for last command to finish")
+        sendMessage("Allspark is busy, wait for last command to finish", update, context)
 
 def startArkserver(update, context):
     logging.info(startArkserver.__name__)
     if False == getThreadLocked():
         setThreadLocked()
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Starting Arkserver")
+        sendMessage("Starting Arkserver", update, context)
         retValue = connectSsh(strIp, strArkserver, strArkserverPw, update, context)
         if True == retValue:
             sendCommand('./arkserver start', update, context)
@@ -169,13 +165,13 @@ def startArkserver(update, context):
         ssh.close()
         setThreadUnlocked()
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Allspark is busy, wait for last command to finish")
+        sendMessage("Allspark is busy, wait for last command to finish", update, context)
 
 def stopArkserver(update, context):
     logging.info(stopArkserver.__name__)
     if False == getThreadLocked():
         setThreadLocked()
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Stopping Arkserver")
+        sendMessage("Stopping Arkserver", update, context)
         retValue = connectSsh(strIp, strArkserver, strArkserverPw, update, context)
         if True == retValue:
             sendCommand('./arkserver stop', update, context)
@@ -183,13 +179,13 @@ def stopArkserver(update, context):
         ssh.close()
         setThreadUnlocked()
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Allspark is busy, wait for last command to finish")
+        sendMessage("Allspark is busy, wait for last command to finish", update, context)
 
 def statusArkserver(update, context):
     logging.info(statusArkserver.__name__)
     if False == getThreadLocked():
         setThreadLocked()
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Getting status of Arkserver")
+        sendMessage("Getting status of Arkserver", update, context)
         retValue = connectSsh(strIp, strArkserver, strArkserverPw, update, context)
         if True == retValue:
             stdout = sendCommand('./arkserver monitor', update, context)
@@ -201,13 +197,13 @@ def statusArkserver(update, context):
         ssh.close()
         setThreadUnlocked()
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Allspark is busy, wait for last command to finish")
+        sendMessage("Allspark is busy, wait for last command to finish", update, context)
 
 def startCssserver(update, context):
     logging.info(startCssserver.__name__)
     if False == getThreadLocked():
         setThreadLocked()
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Starting Cssserver!")
+        sendMessage("Starting Cssserver!", update, context)
         retValue = connectSsh(strIp, strCssserver, strCssserverPw, update, context)
         if True == retValue:
             sendCommand('./cssserver start', update, context)
@@ -215,13 +211,13 @@ def startCssserver(update, context):
         ssh.close()
         setThreadUnlocked()
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Allspark is busy, wait for last command to finish")
+        sendMessage("Allspark is busy, wait for last command to finish", update, context)
 
 def stopCssserver(update, context):
     logging.info(stopCssserver.__name__)
     if False == getThreadLocked():
         setThreadLocked()
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Stopping Cssserver!")
+        sendMessage("Stopping Cssserver!", update, context)
         retValue = connectSsh(strIp, strCssserver, strCssserverPw, update, context)
         if True == retValue:    
             sendCommand('./cssserver stop', update, context)
@@ -229,13 +225,13 @@ def stopCssserver(update, context):
         ssh.close()
         setThreadUnlocked()
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Allspark is busy, wait for last command to finish")
+        sendMessage("Allspark is busy, wait for last command to finish", update, context)
 
 def startMcserver(update, context):
     logging.info(startMcserver.__name__)
     if False == getThreadLocked():
         setThreadLocked()
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Starting Minecraft server")
+        sendMessage("Starting Minecraft server", update, context)
         retValue = connectSsh(strIp, strMcserver, strMcserverPw, update, context)
         if True == retValue:
             sendCommand('./mcserver start', update, context)
@@ -243,13 +239,13 @@ def startMcserver(update, context):
         ssh.close()
         setThreadUnlocked()
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Allspark is busy, wait for last command to finish")
+        sendMessage("Allspark is busy, wait for last command to finish", update, context)
 
 def stopMcserver(update, context):
     logging.info(stopMcserver.__name__)
     if False == getThreadLocked():
         setThreadLocked()
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Stopping Minecraft server")
+        sendMessage("Stopping Minecraft server", update, context)
         retValue = connectSsh(strIp, strMcserver, strMcserverPw, update, context)
         if True == retValue:
             sendCommand('./mcserver stop', update, context)
@@ -257,36 +253,28 @@ def stopMcserver(update, context):
         ssh.close()
         setThreadUnlocked()
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Allspark is busy, wait for last command to finish")
+        sendMessage("Allspark is busy, wait for last command to finish", update, context)
 
+def secretReset(update, context):
+    logging.warn(secretReset.__name__)
+    ssh.close()
+    setThreadUnlocked()
 
-def inline(update, context):
-    logging.info(inline.__name__)
-    query = update.inline_query.query
-    if not query:
-        return
-    results = list()
-    results.append(
-        InlineQueryResultArticle(
-            id=query.upper(),
-            title='help',
-            input_message_content=InputTextMessageContent(query.upper())
-        )
-    )
-    context.bot.answer_inline_query(update.inline_query.id, results)
+def unknown(update, context):
+    sendMessage("Sorry, I didn't understand that command. See /help for my commands", update, context)
 
 def sendCommand(strCommand, update, context):
     stdin, stdout, stderr = ssh.exec_command(strCommand)
     exit_status = stdout.channel.recv_exit_status()
     if exit_status == 0:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Success")
+        sendMessage("Success", update, context)
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Error")
+        sendMessage("Error", update, context)
         stdoutLines = stdout.readlines()
         output = ""
         for line in stdoutLines:
             output=output+line
-        context.bot.send_message(chat_id=update.effective_chat.id, text=output)
+        sendMessage(output, update, context)
     return stdout
 
 def connectSsh(strIp, strUsername, strPassword, update, context):
@@ -295,9 +283,15 @@ def connectSsh(strIp, strUsername, strPassword, update, context):
         ssh.connect(strIp, username=strUsername, password=strPassword, timeout=10)
         retValue = True
     except:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="ERROR: SSH exception, is the Allspark awake?")
+        sendMessage("ERROR: SSH exception, is the Allspark awake?", update, context)
         retValue = False
     return retValue
+
+def sendMessage(strMessage, update, context):
+    try:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=strMessage, timeout=10, allow_sending_without_reply=True)
+    except:
+        logging.error(sendMessage.__name__ + "; " + strMessage)
 
 # Create handlers
 help_handler = CommandHandler('help', help)
@@ -330,10 +324,10 @@ dispatcher.add_handler(startMcserver_handler)
 stopMcserver_handler = CommandHandler('stopMcserver', stopMcserver)
 dispatcher.add_handler(stopMcserver_handler)
 
-inline_handler = InlineQueryHandler(inline)
-dispatcher.add_handler(inline_handler)
+secretReset_handler = CommandHandler('secretReset', secretReset)
+dispatcher.add_handler(secretReset_handler)
 
-echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
-dispatcher.add_handler(echo_handler)
+unknown_handler = MessageHandler(Filters.command, unknown)
+dispatcher.add_handler(unknown_handler)
 
-updater.start_polling()
+updater.start_polling(drop_pending_updates=True)
